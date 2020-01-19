@@ -1,77 +1,44 @@
 import sys
-##
+import itertools
 
-## Esta funcion reduce los elementos que
+class Reducer:
 
-## tienen la misma clave
+    def __init__(self, stream):
+        self.stream = stream
 
-##
+    def emit(self, key, value):
+        sys.stdout.write("{}\t{}\n".format(key, value))
+
+    def reduce(self):
+        ##
+        ## Esta funcion reduce los elementos que
+        ## tienen la misma clave
+        ##
+        for key, group in itertools.groupby(self, lambda x: x[0]):
+            total = 0
+            for _, val in group:
+                total += val
+
+            self.emit(key=key, value=total)
+
+    def __iter__(self):
+
+        for line in self.stream:
+            ##
+            ## Lee el stream de datos y lo parte
+            ## en (clave, valor)
+            ##
+            key, val = line.split("\t")
+            val = int(val)
+
+            ##
+            ## retorna la tupla (clave, valor)
+            ## como el siguiente elemento del ciclo for
+            ##
+            yield (key, val)
+
 
 if __name__ == '__main__':
 
-
-    curkey = None
-
-    total = 0
-
-    ##
-
-    ## cada linea de texto recibida es una
-
-    ## entrada clave \tabulador valor
-
-    ##
-
-    for line in sys.stdin:
-
-
-
-
-        key, val = line.split("\t")
-
-        val = int(val)
-
-
-
-
-        if key == curkey:
-
-            ##
-
-            ## No se ha cambiado de clave. Aca se
-
-            ## acumulan los valores para la misma clave.
-
-            ##
-
-            total += val
-
-        else:
-
-            ##
-
-            ## Se cambio de clave. Se reinicia el
-
-            ## acumulador.
-
-            ##
-
-            if curkey is not None:
-
-                ##
-
-                ## una vez se han reducido todos los elementos
-
-                ## con la misma clave se imprime el resultado en
-
-                ## el flujo de salida
-
-                ##
-
-                sys.stdout.write("{}\t{}\n".format(curkey, total))
-
-            curkey = key
-
-            total = val
-
-    sys.stdout.write("{}\t{}\n".format(curkey, total))
+    reducer = Reducer(sys.stdin)
+    reducer.reduce()
