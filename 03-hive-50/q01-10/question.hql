@@ -11,3 +11,19 @@
 --
 -- >>> Escriba su respuesta a partir de este punto <<<
 --
+DROP TABLE IF EXISTS thive1;
+CREATE TABLE thive1 (
+    letra STRING,
+    fecha STRING,
+    numero INT
+)
+ROW FORMAT DELIMITED
+FIELDS TERMINATED BY '\t';
+
+LOAD DATA LOCAL INPATH  'data.tsv' OVERWRITE INTO TABLE thive1;
+
+INSERT OVERWRITE LOCAL DIRECTORY 'output'
+ROW FORMAT DELIMITED FIELDS TERMINATED BY ','
+(SELECT letra, COUNT(numero)
+FROM thive1
+GROUP BY letra;
