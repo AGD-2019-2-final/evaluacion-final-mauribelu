@@ -26,5 +26,19 @@ LOAD DATA LOCAL INPATH 'data.tsv' INTO TABLE t0;
 --
 -- >>> Escriba su respuesta a partir de este punto <<<
 --
+DROP TABLE IF EXISTS thive12;
+CREATE TABLE thive12 AS
+SELECT c,key
+FROM (SELECT c, c3
+FROM t0
+LATERAL VIEW explode(c2) c1 AS c) thive12
+LATERAL VIEW
+explode(c3) thive12 ;
+
+INSERT OVERWRITE LOCAL DIRECTORY 'output' ROW FORMAT DELIMITED FIELDS TERMINATED BY ','
+
+(SELECT c, key, COUNT(*)
+FROM thive12
+GROUP BY c, key);
 
 
