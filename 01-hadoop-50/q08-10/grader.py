@@ -2,11 +2,11 @@
 #! /usr/local/bin/python3
 r"""Test cases
 >>> run_answer() # doctest: +NORMALIZE_WHITESPACE +ELLIPSIS
-A	165.0	13.75
-B	136.0	13.6
-C	48.0	12.0
-D	15.0	15.0
-E	192.0	14.76923076923077
+A	165	    13.75
+B	136	    13.6
+C	48	    12.0
+D	15	    15.0
+E	192	    14.76923076923077
 <BLANKLINE>
 
 """
